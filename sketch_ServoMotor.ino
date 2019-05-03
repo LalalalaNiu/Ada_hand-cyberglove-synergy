@@ -3,6 +3,7 @@
  *
  * This sketch demonstrates the control of Hs422 servos
  * using ROS and the arduiono
+ * Controlling the proximal phalanges of the modified ada_hand.
  * 
  */
 
