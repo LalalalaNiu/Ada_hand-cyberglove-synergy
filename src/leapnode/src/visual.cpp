@@ -8,7 +8,6 @@
 #include <Leap.h> 
 
 #include <iostream>
-#include <sstream>
 
 
 static ros::Publisher* marker_pub;
@@ -16,18 +15,21 @@ static ros::Publisher* marker_pub;
 const std::string fingerNames[] = {"Thumb", "Index", "Middle", "Ring", "Pinky"};
 
 
-void fingerF(std::string n_f, leap_motion::Bone::_bone_start_type n_b, int k){
+void fingerF(std::string n_f, leap_motion::Bone n_b, int k){
+    
     sensor_msgs::JointState marks;
 
-    n_f = std::to_string (k) + n_f + "x" + n_f +"y" + n_f +"z";
+    n_f = std::to_string (k) + n_f + "x " + n_f +"y " + n_f +"z";
 
     std::cout << n_f << std::endl;
     std::cout << n_b << std::endl;
-    
+
+    marks.header.frame_id.push_back(n_b.type);
+
     marks.name.push_back(n_f);
-    marks.position.push_back(n_b.position.x);
-    marks.position.push_back(n_b.position.y);
-    marks.position.push_back(n_b.position.z);
+    marks.position.push_back(n_b.bone_start.position.x);
+    marks.position.push_back(n_b.bone_start.position.y);
+    marks.position.push_back(n_b.bone_start.position.z);
 
    // return(name, pos);
     marker_pub->publish(marks);
@@ -37,8 +39,8 @@ void leaptrans(const leap_motion::Human::ConstPtr& human, leap_motion::Hand hand
 {
 
     //define the output parameters.
-    
-    std::stringstream ss;
+    sensor_msgs::JointState palm;
+
 
     leap_motion::Finger finger;
     for(unsigned int j = 0; j < hand.finger_list.size(); j++)
@@ -55,16 +57,18 @@ void leaptrans(const leap_motion::Human::ConstPtr& human, leap_motion::Hand hand
             bone = finger.bone_list[k];
         
             //std::cout << ns_finger << std::endl;
-
-            // std::cout << k << std::endl;
-            // std::cout << bone.bone_start.position << std::endl;
-
-            fingerF(ns_finger, bone.bone_start, k);
-            //marks.position.push_back(bone.bone_start.position.x);
             
+            fingerF(ns_finger, bone, k);            
         }
     
     }
+
+    palm.name.push_back("palm_center");
+    palm.position.push_back(hand.palm_center.x);
+    palm.position.push_back(hand.palm_center.y);
+    palm.position.push_back(hand.palm_center.z);
+
+    marker_pub->publish(palm);
 
 }
 
