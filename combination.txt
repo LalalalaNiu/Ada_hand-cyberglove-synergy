@@ -1,0 +1,83 @@
+
+创建一个ROS Workspace 的方法总结：
+
+mkdir -p ~/catkin_ws/src
+
+cd ~/catkin_ws/src
+
+catkin_init_workspace
+
+cd ~/catkin_ws/
+
+catkin_make
+
+source devel/setup.bash
+
+创建一个package：
+S
+cd ~/catkin_ws/src
+
+catkin_create_pkg (package name) std_msgs rospy roscpp
+
+
+after all node files build ready, delete the cmakelist & /build & /devel of the main workspace, remake it through the catkin_make.
+
+if the package didn't show up, then $camke /(the package path).* Leap Motion proprietary and confidential. Not for distribution.              *
+// * Use subject to the terms of the Leap Motion SDK Agreement available at       *
+// * https://developer.leapmotion.com/sdk_agreement, or another agreement         *
+// * between Leap Motion and you, your company or other organization.             *
+// \****************
+
+
+Start the motor of the ada_hand:
+start a terminal then type : rostopic pub /enable_motors std_msgs/Int16MultiArray (auto fill) "{data:[1,1,1,1,1]}"
+	(To pub an array to initiate the motor).
+
+Add a new file in the ros packadge: 
+	Change Cmakelist under the packadge :	1. under build: add_executable 
+						2. add_dependencies
+						3. target_link_libraries. (packadge name)
+
+tips: tty port: chmod 777 /dev/tty~~
+	port diaout problem: sudo adduser 'username' diaout.
+
+draw the ros rreal time plot: rqt_plot.
+~~~~~~~~~~~~~~~~~~~~~~
+boot the leap_motion: sudo leapd. (some time need reboot); roslaunch leap_motion ~~~~;
+
+~~~~~~~~~~~~~~Arduino~~~~~~~~~~~~~~~~
+use rosserial need to install the rosserial in the <ws> of the project.
+after upload the sketch, run roscore; 
+Run: rosrun rosserial_arduino serial_node.py _port:=/dev/tty~~~0 
+sub the topic /servo std_msg/Int16MultiArray data: [0~180,`,`,`];
+
+ada motor range : 0~1.
+
+~~~~~~~~~~~~	rosbag	~~~~~~~~~~~~
+
+rosbag record /~~~~/
+rosbag record --duration=30 /````/  or minutes --duration=1m or duration=2h 
+check the rosbag info: rosbag info <bag file name>
+replay the data: rosbag play <bag file name>;
+
+rosbag record -o /mnt/pen/ /chatter
+rosbag record -O /mnt/pen/test.bag /chatter
+
+_______rqt_plot_______
+could show the realtime data 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
