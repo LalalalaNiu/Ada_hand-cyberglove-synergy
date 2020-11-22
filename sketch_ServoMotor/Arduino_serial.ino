@@ -29,7 +29,8 @@ Servo servoIndex;
 Servo servoMiddle;
 Servo servoRaP;
 
-ros::NodeHandle  nh;
+ros::NodeHandle_<ArduinoHardware, 3, 2, 200, 150> nh;
+
 //Publish node;
 std_msgs::Int16MultiArray Fsr_msg;
 ros::Publisher pub("Fsr/sensor_msgs", &Fsr_msg);
